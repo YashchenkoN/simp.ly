@@ -2,41 +2,49 @@ package controllers
 
 import javax.inject._
 
+import dtos.{CommonResponse, CommonResponseWithData, LinkDto}
+import io.netty.handler.codec.http.HttpResponseStatus
 import models.Link
-import org.apache.commons.lang3.StringUtils
-import play.api.libs.json.Json
+import play.api.libs.json._
 import play.api.mvc._
 import services.LinkService
+import validators.UrlValidator
 
-/**
-  * This controller creates an `Action` to handle HTTP requests to the
-  * application's home page.
-  */
+import scala.language.postfixOps
+
+
 @Singleton
 class LinkController @Inject()(linkService: LinkService) extends Controller {
 
   def redirect(shortUrl: String) = Action {
     val linkOption: Option[Link] = linkService.read(shortUrl)
-    if (linkOption.nonEmpty) Redirect(linkOption.map("http://" + _.url).orNull)
+    if (linkOption.nonEmpty) Redirect(linkOption.map(_.url).orNull)
     else Redirect("/")
   }
 
   def saveLink = Action { request =>
     var link: Link = request.body.asJson.map(json => {
-      val id: Long = (json \ "id").asOpt[Long].getOrElse(0)
-      val url: String = (json \ "url").asOpt[String].map(prepare).orNull
-      Link(id, url, url)
+      val url: String = (json \ "url").asOpt[String].orNull
+      val shortUrl: String = (json \ "shortUrl").asOpt[String].orNull
+      Link(0L, url, shortUrl)
     }).orNull
-    link = linkService.save(link)
-    Ok(Json.toJson(link))
+    if (link != null && UrlValidator.isValid(link.url)) {
+      link = linkService.save(link)
+      Ok(Json.toJson(CommonResponseWithData(LinkDto(link.url, link.shortUrl), HttpResponseStatus.OK.code(), "OK")))
+    } else {
+      BadRequest(Json.toJson(CommonResponse(HttpResponseStatus.BAD_REQUEST.code(), "Invalid URL")))
+    }
   }
 
-  private def prepare(url: String): String = {
-    val result = new StringBuilder(url)
-    if (!StringUtils.endsWith(url, "/")) result append "/"
-    if (StringUtils.startsWith(url, "https://")) result.delete(0, 7)
-    else if (StringUtils.startsWith(url, "http://")) result.delete(0, 6)
-    result toString
-  }
+  implicit val writesLd: Writes[LinkDto] = Json.writes[LinkDto]
+  implicit val writesCr: Writes[CommonResponse] = Json.writes[CommonResponse]
 
+  implicit def searchResultsWrites[T](implicit fmt: Writes[T]): Writes[CommonResponseWithData[T]] =
+    new Writes[CommonResponseWithData[T]] {
+      def writes(ts: CommonResponseWithData[T]) = Json.obj(
+        "status" -> ts.status,
+        "message" -> ts.message,
+        "data" -> ts.data
+      )
+    }
 }

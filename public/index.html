@@ -1,11 +1,57 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Simply | URL Shortener</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link href="/assets/stylesheets/main.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"
+            integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
     <script src="/assets/javascripts/index.js"></script>
 </head>
-<body>
-    Test1
+
+<body style="background-color: #4F6BFF">
+<div class="stage">
+    <div id="container" class="clearfix">
+        <div class="container container-pod shorten-container">
+            <h1 class="page-title t-center">Simp.ly</h1>
+            <div id="form_container" class="t-center mid-container foot-room">
+                <fieldset class="cf">
+                    <input id="shorten_url" taborder="1" name="url" type="text" class="shorten-input"
+                           placeholder="Paste a link to shorten it" value="" autocomplete="off" autocorrect="off"
+                           autocapitalize="off"/>
+                    <input id="shorten_btn" type="submit" class="button button-primary button-large shorten-button"
+                           value="Shorten"/>
+                    <input type="hidden" name="basic_style" value="1">
+                    <input type="hidden" name="classic_mode" value="">
+                    <input type="hidden" name="rapid_shorten_mode" value="">
+                </fieldset>
+                <div id="shorten_actions">
+                </div>
+            </div>
+            <div class="link-container mid-container">
+                <div>
+                    <ul id="anon_history" class="anon_history">
+                        <li class="shortened_link" data-user_hash="1w5Tyr2" data-short_link="http://bit.ly/1w5Tyr2">
+                            <div class="unauth-title">
+                                <a class="article-title" href="http://url.com/">url.com: Search lyrics</a>
+                            </div>
+                            <div class="unauth-title-url">
+                                <a class="article-title smaller" href="http://url.com/">url.com/</a>
+                            </div>
+                            <div class="unauth_capsule clearfix">
+                                <a class="short-url" href="http://bit.ly/1w5Tyr2">http://bit.ly/1w5Tyr2</a>
+                                <a class="copy button primary" data-clipboard-text="http://bit.ly/1w5Tyr2">Copy</a>
+                                <a class="info_page" href="/1w5Tyr2+"><i class="default fa fa-bar-chart-o"></i> 235</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
 </body>
+
 </html>

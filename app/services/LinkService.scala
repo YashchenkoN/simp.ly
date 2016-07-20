@@ -16,7 +16,8 @@ import models.Link
 trait LinkService {
   def read(shortUrl: String): Option[Link]
   def save(link: Link): Link
-  def makeShort(link: Link): Link
+  def simplify(link: Link): Link
+  def checkOrSimplify(link: Link): Link
 }
 
 class LinkServiceImpl @Inject()(linkDao: LinkDao) extends LinkService {
@@ -25,12 +26,17 @@ class LinkServiceImpl @Inject()(linkDao: LinkDao) extends LinkService {
     Option.apply(linkDao.read(shortUrl))
 
   def save(link: Link): Link =
-    linkDao.save(makeShort(link))
+    linkDao.save(if (link.shortUrl == null) simplify(link) else checkOrSimplify(link))
 
-  def makeShort(link: Link): Link = {
+  def simplify(link: Link): Link = {
     require(link.url != null)
     val builder = new StringBuilder
     builder append Hashing.murmur3_32().hashString(link.url, StandardCharsets.UTF_8).toString
     Link(link.id, link.url, builder.toString)
+  }
+
+  def checkOrSimplify(link: Link): Link = {
+    if (linkDao.read(link.shortUrl) != null) simplify(link)
+    else link
   }
 }
