@@ -32,7 +32,9 @@ $('document').ready(function () {
             success: function (data) {
                 console.log(data);
                 var linkObject = data.data;
-                $('#anon_history').append(getHistoryFragment(linkObject))
+                if (!$('#' + linkObject.url).length) {
+                    $('#anon_history').append(getHistoryFragment(linkObject));
+                }
             },
             error: function (data) {
                 console.log(data);
@@ -41,8 +43,8 @@ $('document').ready(function () {
         });
     });
 
-    $("#shorten_url").keyup(function(event){
-        if(event.keyCode == 13){
+    $("#shorten_url").keyup(function(event) {
+        if (event.keyCode == 13) {
             $('#shorten_btn').click();
         }
     });
@@ -60,7 +62,7 @@ $('document').ready(function () {
                         '<a class="article-title" target="_blank" href="' + originalLink + '">' + originalLink + '</a>' +
                     '</div>' +
                     '<div class="unauth-title-url">' +
-                        '<a class="article-title smaller" target="_blank" href="' + originalLink + '">' + originalLink + '</a>' +
+                        '<a id="' + originalLink + '" class="article-title smaller" target="_blank" href="' + originalLink + '">' + originalLink + '</a>' +
                     '</div>' +
                     '<div class="unauth_capsule clearfix">' +
                         '<a class="short-url" target="_blank" href="' + shortUrl + '">' + shortUrl + '</a>' +
