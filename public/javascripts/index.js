@@ -17,13 +17,17 @@ $('document').ready(function () {
     });
 
     $('#shorten_btn').on('click', function () {
+        var url = $('#shorten_url').val();
+        if (!/^https?:\/\//i.test(url)) {
+            url = 'http://' + url;
+        }
         $.ajax({
             url: '/api/shorten',
             type: 'POST',
             dataType: 'json',
             contentType: 'application/json',
             data: JSON.stringify({
-                url: $('#shorten_url').val()
+                url: url
             }),
             success: function (data) {
                 console.log(data);
