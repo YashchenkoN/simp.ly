@@ -32,7 +32,7 @@ $('document').ready(function () {
             success: function (data) {
                 console.log(data);
                 var linkObject = data.data;
-                if (!$('#' + linkObject.url).length) {
+                if (!$('#' + linkObject.shortUrl).length) {
                     $('#anon_history').append(getHistoryFragment(linkObject));
                 }
             },
@@ -62,12 +62,12 @@ $('document').ready(function () {
                         '<a class="article-title" target="_blank" href="' + originalLink + '">' + originalLink + '</a>' +
                     '</div>' +
                     '<div class="unauth-title-url">' +
-                        '<a id="' + originalLink + '" class="article-title smaller" target="_blank" href="' + originalLink + '">' + originalLink + '</a>' +
+                        '<a class="article-title smaller" target="_blank" href="' + originalLink + '">' + originalLink + '</a>' +
                     '</div>' +
                     '<div class="unauth_capsule clearfix">' +
                         '<a class="short-url" target="_blank" href="' + shortUrl + '">' + shortUrl + '</a>' +
                         '<a class="copy button primary" target="_blank" data-clipboard-text="http://bit.ly/1w5Tyr2">Copy</a>' +
-                        '<a class="info_page" target="_blank" href="/' + linkObject.shortUrl + '">' +
+                        '<a id="' + linkObject.shortUrl + '" class="info_page" target="_blank" href="/' + linkObject.shortUrl + '">' +
                             '<i class="default fa fa-bar-chart-o"></i> ' + linkObject.views +
                         '</a>' +
                     '</div>' +
