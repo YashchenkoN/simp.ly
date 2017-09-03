@@ -41,6 +41,12 @@ $('document').ready(function () {
         });
     });
 
+    $("#shorten_url").keyup(function(event){
+        if(event.keyCode == 13){
+            $('#shorten_btn').click();
+        }
+    });
+
     function getDomain() {
         return location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '') + '/';
     }
